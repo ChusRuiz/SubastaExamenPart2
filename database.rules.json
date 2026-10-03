@@ -1,0 +1,22 @@
+{
+  "rules": {
+    "vehicles": {
+      ".read": true,
+      "$id": {
+        ".write": "auth != null && ((!data.exists() && newData.child('sellerId').val() == auth.uid) || (data.exists() && data.child('sellerId').val() == auth.uid))",
+        ".validate": "newData.hasChildren(['year','itemType','brand','model','engine','transmission','fuel','drivetrain','cylinders','damage','images','basePrice','currentBid','startAt','endAt','sellerId'])",
+        "currentBid": {".validate":"newData.isNumber() && newData.val() >= newData.parent().child('basePrice').val()"},
+        "images": {".validate":"newData.hasChildren() && newData.numChildren() >= 5"},
+        "basePrice": {".validate":"newData.isNumber() && newData.val() >= 20000"},
+        "startAt": {".validate":"newData.isNumber()"},
+        "endAt": {".validate":"newData.isNumber() && newData.val() > newData.parent().child('startAt').val()"}
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read":"auth != null && auth.uid == $uid",
+        ".write":"auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}
